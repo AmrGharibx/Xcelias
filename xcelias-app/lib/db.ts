@@ -7,15 +7,41 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
-const databaseUrl = process.env.DATABASE_URL || "file:./dev.db";
+const isProduction = process.env.NODE_ENV === "production";
 const authToken = process.env.TURSO_AUTH_TOKEN;
 
+function resolveDatabaseUrl() {
+  if (process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL;
+  }
+
+  if (isProduction) {
+    throw new Error("DATABASE_URL is required in production.");
+  }
+
+  return "file:./dev.db";
+}
+
 function createAdapter() {
+  const databaseUrl = resolveDatabaseUrl();
+
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is required in production.");
+  }
+
   if (databaseUrl.startsWith("libsql://") || databaseUrl.startsWith("https://")) {
+    if (!authToken) {
+      throw new Error("TURSO_AUTH_TOKEN is required when using a libSQL/Turso DATABASE_URL.");
+    }
+
     return new PrismaLibSql({
       url: databaseUrl,
       authToken,
     });
+  }
+
+  if (isProduction) {
+    throw new Error("Production deployments must use a libsql:// or https:// DATABASE_URL.");
   }
 
   return new PrismaBetterSqlite3({
@@ -23,20 +49,34 @@ function createAdapter() {
   });
 }
 
-const adapter = createAdapter();
-
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const db =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    adapter,
+function getPrismaClient() {
+  if (globalForPrisma.prisma) {
+    return globalForPrisma.prisma;
+  }
+
+  const client = new PrismaClient({
+    adapter: createAdapter(),
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+  if (!isProduction) {
+    globalForPrisma.prisma = client;
+  }
+
+  return client;
+}
+
+export const db = new Proxy({} as PrismaClient, {
+  get(_target, prop, receiver) {
+    const client = getPrismaClient();
+    const value = Reflect.get(client as unknown as object, prop, receiver);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+}) as PrismaClient;
 
 // ============================================================
 // HELPER FUNCTIONS
