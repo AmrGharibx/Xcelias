@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ensureAdminExists, createAdmin, createSession, type SessionUser } from "@/lib/auth";
+import { ensureAdminExists, createAdmin } from "@/lib/auth";
 import { registerSchema, parseBody } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
@@ -27,20 +27,20 @@ export async function POST(request: NextRequest) {
     const { email, name, password } = parsed.data;
     const user = await createAdmin(email, name, password);
 
-    const sessionUser: SessionUser = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: "admin",
-      avatar: user.avatar,
-    };
-
-    await createSession(sessionUser);
-
-    return NextResponse.json({ user: sessionUser }, { status: 201 });
+    return NextResponse.json(
+      {
+        user,
+        redirectTo: "/login",
+        message: "Admin account created. Please sign in.",
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Setup error:", error);
-    return NextResponse.json({ error: "Setup failed" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Setup failed" },
+      { status: 500 }
+    );
   }
 }
 

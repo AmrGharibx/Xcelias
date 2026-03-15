@@ -45,7 +45,7 @@ export default function SetupPage() {
         return;
       }
 
-      router.replace("/command-center");
+      router.replace(data.redirectTo || "/login");
     } catch {
       setError("Network error. Please try again.");
       setLoading(false);
