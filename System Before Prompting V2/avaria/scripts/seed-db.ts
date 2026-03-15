@@ -4,7 +4,7 @@
 // ============================================================
 
 import { db, normalizeCompany, normalizeOutcome, normalizeAttendanceStatus, normalizeBatchStatus, parseTime } from "../lib/db";
-import notionData from "../lib/notiondata.json";
+import notionData from "../lib/notionData.json";
 
 type TraineeData = typeof notionData.trainees[number];
 type BatchData = typeof notionData.batches[number];

@@ -662,7 +662,7 @@ async function main() {
   };
   
   // Write to JSON file
-  const outputPath = path.join(process.cwd(), 'lib', 'notiondata.json');
+  const outputPath = path.join(process.cwd(), 'lib', 'notionData.json');
   fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
   console.log(`\n📁 Data written to ${outputPath}`);
   
