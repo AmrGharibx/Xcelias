@@ -7,6 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
     "import:datacv": "tsx scripts/parseNotionData.ts && tsx scripts/seed-db.ts"
   },
   "dependencies": {
