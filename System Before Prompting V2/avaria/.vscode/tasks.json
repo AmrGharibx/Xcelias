@@ -1,0 +1,66 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "smoke:dev (3005)",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-ExecutionPolicy",
+				"Bypass",
+				"-Command",
+				"Set-Location -Path 'J:\\avaria'; $ErrorActionPreference='Stop'; try { taskkill /F /IM node.exe /T 2>$null | Out-Null } catch { }; Start-Sleep -Milliseconds 800; $npmCmd=(Get-Command npm.cmd -ErrorAction Stop).Source; Start-Process -FilePath $npmCmd -ArgumentList @('run','dev','--','-p','3005') -WorkingDirectory (Get-Location) | Out-Null; for($i=0;$i -lt 80;$i++){ if(Get-NetTCPConnection -State Listen -LocalPort 3005 -ErrorAction SilentlyContinue){ break }; Start-Sleep -Milliseconds 250 }; 'health=' + (curl.exe -sS -m 10 -o NUL -w '%{http_code}' http://127.0.0.1:3005/api/health); 'dashboard=' + (curl.exe -sS -m 20 -o NUL -w '%{http_code}' http://127.0.0.1:3005/api/dashboard); 'trainees=' + (curl.exe -sS -m 20 -o NUL -w '%{http_code}' \"http://127.0.0.1:3005/api/trainees?page=1&pageSize=3\"); 'search=' + (curl.exe -sS -m 20 -o NUL -w '%{http_code}' \"http://127.0.0.1:3005/api/search?q=Batch%2031\"); 'Dev running: http://localhost:3005'"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "smoke:dev (3005) v2",
+			"type": "shell",
+			"command": "Set-Location -Path \"J:\\avaria\"; $ErrorActionPreference=\"Stop\"; try { taskkill /F /IM node.exe /T 2>$null | Out-Null } catch { }; Start-Sleep -Milliseconds 800; $npmCmd=(Get-Command npm.cmd -ErrorAction Stop).Source; Start-Process -FilePath $npmCmd -ArgumentList @(\"run\",\"dev\",\"--\",\"-p\",\"3005\") -WorkingDirectory (Get-Location) | Out-Null; for($i=0;$i -lt 80;$i++){ if(Get-NetTCPConnection -State Listen -LocalPort 3005 -ErrorAction SilentlyContinue){ break }; Start-Sleep -Milliseconds 250 }; \"health=\" + (curl.exe -sS -m 10 -o NUL -w \"%{http_code}\" http://127.0.0.1:3005/api/health); \"dashboard=\" + (curl.exe -sS -m 20 -o NUL -w \"%{http_code}\" http://127.0.0.1:3005/api/dashboard); \"trainees=\" + (curl.exe -sS -m 20 -o NUL -w \"%{http_code}\" \"http://127.0.0.1:3005/api/trainees?page=1&pageSize=3\"); \"search=\" + (curl.exe -sS -m 20 -o NUL -w \"%{http_code}\" \"http://127.0.0.1:3005/api/search?q=Batch%2031\"); \"Dev running: http://localhost:3005\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "smoke:dev (3005) v3",
+			"type": "shell",
+			"command": "Set-Location -Path 'J:\\avaria'; $ErrorActionPreference='Continue'; try { taskkill /F /IM node.exe /T 2>$null | Out-Null } catch { }; Start-Sleep -Milliseconds 800; $npmCmd=(Get-Command npm.cmd -ErrorAction Stop).Source; $p=Start-Process -FilePath $npmCmd -ArgumentList @('run','dev','--','-p','3005') -WorkingDirectory (Get-Location) -PassThru; for($i=0;$i -lt 80;$i++){ if(Get-NetTCPConnection -State Listen -LocalPort 3005 -ErrorAction SilentlyContinue){ break }; Start-Sleep -Milliseconds 250 }; 'dev.pid=' + $p.Id; 'health=' + (curl.exe -sS -m 10 -o NUL -w '%{http_code}' 'http://127.0.0.1:3005/api/health'); 'dashboard=' + (curl.exe -sS -m 20 -o NUL -w '%{http_code}' 'http://127.0.0.1:3005/api/dashboard'); 'trainees=' + (curl.exe -sS -m 20 -o NUL -w '%{http_code}' 'http://127.0.0.1:3005/api/trainees?page=1&pageSize=3'); 'search=' + (curl.exe -sS -m 20 -o NUL -w '%{http_code}' 'http://127.0.0.1:3005/api/search?q=Batch%2031'); 'Dev running: http://localhost:3005'",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "smoke:http (3005)",
+			"type": "shell",
+			"command": "$ErrorActionPreference='Continue'; $base='http://127.0.0.1:3005'; function Code($u){ try { $r=Invoke-WebRequest -UseBasicParsing -TimeoutSec 15 -Uri $u; return [int]$r.StatusCode } catch { return 'ERR' } }; 'health=' + (Code \"$base/api/health\"); 'dashboard=' + (Code \"$base/api/dashboard\"); 'trainees=' + (Code \"$base/api/trainees?page=1&pageSize=3\"); 'search=' + (Code \"$base/api/search?q=Batch%2031\");",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "smoke:http (3005) v2",
+			"type": "shell",
+			"command": "$ErrorActionPreference='Continue'; $base='http://127.0.0.1:3005'; function Code($u){ try { $r=Invoke-WebRequest -UseBasicParsing -TimeoutSec 15 -Uri $u; return [int]$r.StatusCode } catch { return 'ERR' } }; 'health=' + (Code ($base + '/api/health')); 'dashboard=' + (Code ($base + '/api/dashboard')); 'trainees=' + (Code ($base + '/api/trainees?page=1&pageSize=3')); 'search=' + (Code ($base + '/api/search?q=Batch%2031'));",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "smoke:http (3005) v3",
+			"type": "shell",
+			"command": "$ErrorActionPreference='Continue'; $base='http://127.0.0.1:3005'; function Code($u){ try { $r=Invoke-WebRequest -UseBasicParsing -TimeoutSec 15 -Uri $u; return [int]$r.StatusCode } catch { return 'ERR' } }; 'health=' + (Code ($base + '/api/health')); 'dashboard=' + (Code ($base + '/api/dashboard')); 'trainees=' + (Code ($base + '/api/trainees?page=1&pageSize=3')); 'search=' + (Code ($base + '/api/search?q=Batch%2031'));",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "dev (3005)",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
