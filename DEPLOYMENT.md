@@ -1,6 +1,6 @@
 # Xcelias Deployment
 
-This repository should be pushed as a single root git repository, but the production app is the Next.js project in `System Before Prompting V2/avaria`.
+This repository should be pushed as a single root git repository, but the production app is the Next.js project in `xcelias-app`.
 
 ## 1. GitHub Remote
 
@@ -31,7 +31,7 @@ git remote set-url origin https://github.com/AmrGharibx/Xcelias.git
 When importing into Vercel:
 
 - Framework preset: Next.js
-- Root Directory: `System Before Prompting V2/avaria`
+- Root Directory: `xcelias-app`
 - Install command: `npm install`
 - Build command: `npm run build`
 

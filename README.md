@@ -1,10 +1,10 @@
 # Xcelias
 
-Xcelias is the consolidated academy platform workspace. The production application lives in `System Before Prompting V2/avaria`, while the other top-level folders remain as source workspaces that were audited and mined during the consolidation process.
+Xcelias is the consolidated academy platform workspace. The production application now lives in `xcelias-app` for deployment purposes, while `System Before Prompting V2/avaria` remains the original source workspace that was audited and consolidated.
 
 ## Production App
 
-- App directory: `System Before Prompting V2/avaria`
+- App directory: `xcelias-app`
 - Framework: Next.js 16 + React 19 + TypeScript
 - Public flagship route: `/`
 - Protected operations route: `/command-center`
@@ -15,7 +15,8 @@ Xcelias is the consolidated academy platform workspace. The production applicati
 
 ## Repository Layout
 
-- `System Before Prompting V2/avaria` — main Xcelias app to deploy
+- `xcelias-app` — main Xcelias app to deploy
+- `System Before Prompting V2/avaria` — original implementation workspace retained for reference
 - `Activites ( WorkSpace )` — legacy academy activity source
 - `Content ( WorkSpace )` — legacy learning content source
 - `Report Generation ( WorkSpace )` — legacy report-generation source
@@ -25,7 +26,7 @@ Xcelias is the consolidated academy platform workspace. The production applicati
 ## Local Development
 
 ```powershell
-Set-Location 'System Before Prompting V2/avaria'
+Set-Location 'xcelias-app'
 npm install
 npm run dev
 ```
@@ -34,4 +35,4 @@ The app uses a local SQLite file for development by default. For production depl
 
 ## Deployment
 
-Deploy the app from the `System Before Prompting V2/avaria` directory. For a full GitHub, Vercel, and domain connection flow, see `DEPLOYMENT.md`.
+Deploy the app from the `xcelias-app` directory. For a full GitHub, Vercel, and domain connection flow, see `DEPLOYMENT.md`.
