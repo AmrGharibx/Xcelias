@@ -1,0 +1,19 @@
+**/node_modules/
+**/.next/
+**/out/
+**/build/
+**/coverage/
+**/.vercel/
+**/.turbo/
+**/.cache/
+**/*.tsbuildinfo
+**/.env
+**/.env.*
+!**/.env.example
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/.DS_Store
+**/Thumbs.db
+System Before Prompting V2/avaria/dev.db
+System Before Prompting V2/avaria/dev.db-journal
